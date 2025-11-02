@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "minecraft:item/paper"
+  },
+  "overrides": [
+    { "predicate": { "custom_model_data": 0 }, "model": "minecraft:item/paper" },
+    { "predicate": { "custom_model_data": 1 }, "model": "omega:item/buttons/lock" },
+    { "predicate": { "custom_model_data": 2 }, "model": "omega:item/buttons/next_page" },
+    { "predicate": { "custom_model_data": 3 }, "model": "omega:item/buttons/back" },
+    { "predicate": { "custom_model_data": 4 }, "model": "omega:item/buttons/money" },
+    { "predicate": { "custom_model_data": 5 }, "model": "omega:item/buttons/claimblocks" },
+    { "predicate": { "custom_model_data": 6 }, "model": "omega:item/buttons/sort" },
+    { "predicate": { "custom_model_data": 7 }, "model": "omega:item/buttons/expired" },
+    { "predicate": { "custom_model_data": 8 }, "model": "omega:item/buttons/search" },
+    { "predicate": { "custom_model_data": 9 }, "model": "omega:item/buttons/mine" },
+    { "predicate": { "custom_model_data": 10 }, "model": "omega:item/buttons/refresh" },
+    { "predicate": { "custom_model_data": 11 }, "model": "omega:item/buttons/home" },
+    { "predicate": { "custom_model_data": 12 }, "model": "omega:item/buttons/gavel" },
+    { "predicate": { "custom_model_data": 13 }, "model": "omega:item/buttons/gavel1" },
+    { "predicate": { "custom_model_data": 14 }, "model": "omega:item/buttons/desc" },
+    { "predicate": { "custom_model_data": 15 }, "model": "omega:item/buttons/tick" },
+    { "predicate": { "custom_model_data": 16 }, "model": "omega:item/buttons/cross" }
+  ]
+}
