@@ -1,0 +1,103 @@
+name: Create Resource Pack Release
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:  # Allows manual triggering
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Fetch full history
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Configure Git
+      run: |
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "actions@github.com"
+    
+    - name: Create Resource Pack Archive
+      uses: thedoctor0/zip-release@0.7.5
+      with:
+        type: 'zip'
+        filename: 'release.zip'
+        exclusions: |
+          *.git*
+          *.github*
+          *node_modules*
+          *.editorconfig
+          *.gitignore
+          *.md
+          README*
+          LICENSE*
+          .DS_Store
+          Thumbs.db
+    
+    - name: Verify archive contents and generate hash
+      run: |
+        echo "Archive created successfully!"
+        ls -la release.zip
+        echo "Archive contents (first 20 entries):"
+        unzip -l release.zip | head -20
+        echo ""
+        echo "Generating hashes..."
+        echo "SHA256: $(sha256sum release.zip | cut -d' ' -f1)"
+        echo "SHA1: $(sha1sum release.zip | cut -d' ' -f1)"
+        echo "MD5: $(md5sum release.zip | cut -d' ' -f1)"
+        
+        # Save hashes to environment for use in release notes
+        echo "PACK_SHA256=$(sha256sum release.zip | cut -d' ' -f1)" >> $GITHUB_ENV
+        echo "PACK_SHA1=$(sha1sum release.zip | cut -d' ' -f1)" >> $GITHUB_ENV
+        echo "PACK_MD5=$(md5sum release.zip | cut -d' ' -f1)" >> $GITHUB_ENV
+        echo "PACK_SIZE=$(stat -f%z release.zip 2>/dev/null || stat -c%s release.zip)" >> $GITHUB_ENV
+    
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: release
+        name: "Latest Resource Pack Release"
+        body: |
+          🦓 **OmegaZoo Resource Pack**
+          
+          Automatically generated resource pack for OmegaMC Zoo server (Pack Format 16 - Minecraft 1.20+).
+          
+          ## 📥 Usage
+          - **Download:** Click `release.zip` below to download manually
+          - **ForcePacks URL:** `https://github.com/${{ github.repository }}/releases/download/release/release.zip`
+          - **Direct integration:** Use the URL above in your server's ForcePacks plugin configuration
+          
+          ## ✨ Features
+          - Custom GUI buttons and icons
+          - Server-specific rank indicators
+          - Bountiful mod integration
+          - Enhanced font system with spacing controls
+          - Zoo-themed visual elements
+          
+          ## 🔐 File Verification
+          **File Size:** ${{ env.PACK_SIZE }} bytes
+          **SHA256:** `${{ env.PACK_SHA256 }}`
+          **SHA1:** `${{ env.PACK_SHA1 }}`
+          **MD5:** `${{ env.PACK_MD5 }}`
+          
+          ## 📊 Build Information
+          **Generated:** ${{ github.event.head_commit.timestamp }}
+          **Workflow Run:** ${{ github.run_id }}
+          **Commit:** [`${{ github.sha }}`](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
+          **Branch:** ${{ github.ref_name }}
+        files: |
+          release.zip
+        prerelease: false
+        make_latest: true
+        generate_release_notes: false
+        fail_on_unmatched_files: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
