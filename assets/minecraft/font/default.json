@@ -748,6 +748,13 @@
 	     "height": 195,
 	     "ascent": 64,
 	     "chars": ["\u050A"]
-	}                                                                                     
+	},
+	{
+	     "type": "bitmap",
+	     "file": "omega:font/guis/advent.png",
+	     "height": 195,
+	     "ascent": 64,
+	     "chars": ["\u050B"]
+	}                                                                                    
     ]
 }
